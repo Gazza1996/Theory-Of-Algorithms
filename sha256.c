@@ -24,7 +24,7 @@ uint32_t SIG1(uint32_t x);
 uint32_t Ch(uint32_t x, uint32_t y, uint32_t z);
 uint32_t Maj(uint32_t x, uint32_t y, uint32_t z);
 
-
+// main method
 int main(int argc, char *argv[]){
   
   //header for program
@@ -38,6 +38,8 @@ int main(int argc, char *argv[]){
   // must add a return method
   return 0;
 }
+
+// functions
 
 void sha256(){
   printf("Starting SHA256........ \n\n");
@@ -133,11 +135,11 @@ void sha256(){
 
   printf("\n ---- Completed Successfully ----\n");
 }
-
+// rotate right
 uint32_t rotr(uint32_t n, uint32_t x){
   return (x >> n) | (x << (32 - n));
 }
-
+// shift right
 uint32_t shr(uint32_t n, uint32_t x){
   return (x >> n);
 }
@@ -160,11 +162,11 @@ uint32_t SIG1(uint32_t x){
   return (rotr(6, x) ^ rotr(11, x) ^ rotr(25, x));
 }
 
-
+// choose
 uint32_t Ch(uint32_t x, uint32_t y, uint32_t z){
   return ((x & y) ^ ((!x) & z));
 }
-
+// Majority
 uint32_t Maj(uint32_t x, uint32_t y, uint32_t z){
   return ((x & y) ^ (x & z) ^ (y & z));
 }
