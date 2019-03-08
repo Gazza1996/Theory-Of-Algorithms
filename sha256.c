@@ -26,13 +26,22 @@ uint32_t Maj(uint32_t x, uint32_t y, uint32_t z);
 
 
 int main(int argc, char *argv[]){
+  
+  //header for program
+  printf("\n ----------------------------------\n");
+  printf("\n ---- SHA256 Hashing Algorithm ----\n");
+  printf("\n ----------------------------------\n");
 
+  // call the function in main method to compile
   sha256();
 
+  // must add a return method
   return 0;
 }
 
 void sha256(){
+  printf("Starting SHA256........ \n\n");
+
   // k constants. Section 4.2.2
   uint32_t K[] = {
   0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,
@@ -121,6 +130,8 @@ void sha256(){
   }
 
   printf("%x %x %x %x %x %x %x %x\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
+
+  printf("\n ---- Completed Successfully ----\n");
 }
 
 uint32_t rotr(uint32_t n, uint32_t x){
