@@ -42,8 +42,19 @@ int main(int argc, char *argv[]){
   printf("\n ---- SHA256 Hashing Algorithm ----\n");
   printf("\n ----------------------------------\n");
 
+  if(argc>=1){
+    printf("\n Reading file...... \n");
+    int argCount = argc;
+    char *fileName = argv[1];
+    char fileContent;
+
+    fileRead(argCount, fileName);
+  }else{
+    printf("Error!!! Go back!!!");
+    exit;
+  }
   // call the function in main method to compile
-  sha256();
+ // sha256();
 
   // must add a return method
   return 0;
