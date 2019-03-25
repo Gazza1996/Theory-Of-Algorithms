@@ -34,6 +34,8 @@ union msgblock{
 
 enum status [READ, PAD0, PAD1, FINISH};
 
+char fileRead();
+
 // main method
 int main(int argc, char *argv[]){
   
@@ -76,8 +78,16 @@ char fileRead(int argCount, char *fileName){
 
   if(file == NULL){
     printf("\n No file found, try again!!! \n", fileName);
+  }else{
+    printf("\n ---- File ----- \n");
+
+    while(s == READ){
+      nobytes = fread(M.e, 1, 64, file);
+
+      nobits = nobits + (nobytes * 8);
+    }
   }
- }
+}
 
 void sha256(){
   printf("Starting SHA256........ \n\n");
