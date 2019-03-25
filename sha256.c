@@ -5,6 +5,7 @@
 // input/output
 #include<stdio.h>
 #include<stdint.h>
+#include<stdlib.h>
 
 void sha256();
 
@@ -23,6 +24,13 @@ uint32_t SIG1(uint32_t x);
 // section 4.1.2
 uint32_t Ch(uint32_t x, uint32_t y, uint32_t z);
 uint32_t Maj(uint32_t x, uint32_t y, uint32_t z);
+
+// message block
+union msgblock{
+  uint8_t   e[64];
+  uint32_t  t[16];
+  uint64_t  s[8];
+};
 
 // main method
 int main(int argc, char *argv[]){
@@ -130,7 +138,7 @@ void sha256(){
   H[7] = h + H[7];
 
   }
-
+  // output of the file
   printf("%x %x %x %x %x %x %x %x\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
 
   printf("\n ---- Completed Successfully ----\n");
