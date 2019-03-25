@@ -32,6 +32,8 @@ union msgblock{
   uint64_t  s[8];
 };
 
+enum status [READ, PAD0, PAD1, FINISH};
+
 // main method
 int main(int argc, char *argv[]){
   
