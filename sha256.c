@@ -62,6 +62,23 @@ int main(int argc, char *argv[]){
 
 // functions
 
+char fileRead(int argCount, char *fileName){
+  // vars
+  FILE *file;
+  char fileContent[10000];
+  int i;
+  uint64_t nobits = 0;
+  uint64_t nobytes;
+  enum status s = READ;
+  union msgBlock M;
+
+  file = fopen(fileName, "r");
+
+  if(file == NULL){
+    printf("\n No file found, try again!!! \n", fileName);
+  }
+ }
+
 void sha256(){
   printf("Starting SHA256........ \n\n");
 
