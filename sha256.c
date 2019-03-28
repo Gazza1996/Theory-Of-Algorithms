@@ -51,7 +51,7 @@ int main(int argc, char *argv[]){
   f = fopen(argv[1], "r");
 
   // call the function in main method to compile
-   sha256();
+  sha256(f);
 
   // must add a return method
   return 0;
@@ -59,7 +59,14 @@ int main(int argc, char *argv[]){
 
 // functions
 void sha256(FILE *f){
-  
+
+  // current message block
+  union msgblock M;
+  // number of bits read from the file
+  uint64_t nobits = 0;
+  // message block status(Padding)
+  enum status S = READ;
+
   printf("Starting SHA256........ \n\n");
 
   // k constants. Section 4.2.2
@@ -102,18 +109,20 @@ void sha256(FILE *f){
    , 0x5be0cd19
 
   };
+
   // current message block
-  uint32_t M[16] = {0, 0, 0, 0, 0, 0, 0, 0};
+  // not needed
+  //uint32_t M[16] = {0, 0, 0, 0, 0, 0, 0, 0};
   
   // looping
   int i,t;
 
   // loop through message block as per page 22
-  for(i = 0; i < 1; i++){
+  while(nextmsgBlock(f, M, S, nobits)){
 
   // from page 22, W[t] = M[t] for 0 <= t <= 15
   for(t = 0; t< 16; t++)
-    W[t] = M[t];
+    W[t] = M.t[t];
 
   // from page 22, W[t] = ...
   for(t = 16; t < 64; t++)
@@ -190,18 +199,35 @@ uint32_t Maj(uint32_t x, uint32_t y, uint32_t z){
 }
 
 int nextmsgBlock{FILE *f, union msgblock *M, enum status *S, int *nobits}{
+  // for looping
   int i;
+  // number of bytes from fread
+  uint64_t nobyte;
 
-  union msgblock M;
+  // if we have finished all msgblocks, S should FINISH
+  if(*S == FINISH){
+    return 0;
+  }
+  
+  // otherwise check if we need another block full of padding
+  if (*S == PAD0 || *S == PAD1){
+      // set first 56 bytes to 0 bits
+      for (i = 0; i < 56; i++){
+        M->e[i] = 0x00;
+      }
+      
+      // set last 64 bits to the number of bits in the file(should be big endian)
+      M->s[7] = nobits;
+      // tell S we are finished
+      *S = FINISH;
+       
+      if (S == PAD1){
+       M.e[0] = 0x80;
+      // keep the loop in sha256 for one more iteration
+       return 1;
+      }
+  }
 
-  uint64_t nobits = 0;
-
-  uint64_t nobytes;
-
-  enum status S = READ;
-
-  // not reached end of file
-  while (S == READ) {
     nobytes = fread(M.e, 1, 64, f);
     // debug message
     printf("Read %2llu bytes\n", nobytes);
@@ -232,22 +258,10 @@ int nextmsgBlock{FILE *f, union msgblock *M, enum status *S, int *nobits}{
     }
   }
 
-  if (S == PAD0 || S == PAD1){
-    for (i = 0; i < 56; i++)
-      M.e[i] = 0x00;
-      M.s[7] = nobits;
-  }
-  if (S == PAD1)
-    M.e[0] = 0x80;
-
     // close the file
     fclose(f);
 
-    for (int i = 0; i < 64; i++)
-      printf("%x ", M.e[i]);
-    printf("\n");
-
-    return 0;
+    return 1;
   }
 
 
