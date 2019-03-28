@@ -50,17 +50,6 @@ int main(int argc, char *argv[]){
   FILE *f;
   f = fopen(argv[1], "r");
 
- // if(argc>=1){
-   // printf("\n Reading file...... \n");
-   // int argCount = argc;
-   // char *fileName = argv[1];
-   // char fileContent;
-
-   // fileRead(argCount, fileName);
- // }else{
-   // printf("Error!!! Go back!!!");
-  //  exit;
-//  }
   // call the function in main method to compile
    sha256();
 
@@ -69,34 +58,7 @@ int main(int argc, char *argv[]){
 }
 
 // functions
-
-//char fileRead(int argCount, char *fileName){
-  // vars
-  //FILE *file;
-  //char fileContent[10000];
-  //int i;
-  //uint64_t nobits = 0;
-  //uint64_t nobytes;
-  //enum status s = READ;
-  //union msgBlock M;
-
-  //file = fopen(fileName, "r");
-
-  /*if(file == NULL){
-    printf("\n No file found, try again!!! \n", fileName);
-  }else{
-    printf("\n ---- File ----- \n");
-
-    while(s == READ){
-      nobytes = fread(M.e, 1, 64, file);
-
-      nobits = nobits + (nobytes * 8);
-    }
-  }
-}*/
-
 void sha256(FILE *f){
-  
   
   printf("Starting SHA256........ \n\n");
 
