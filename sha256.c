@@ -32,12 +32,12 @@ union msgblock{
   uint64_t  s[8];
 };
 
-enum status [READ, PAD0, PAD1, FINISH};
+enum status {READ, PAD0, PAD1, FINISH};
 
 //char fileRead();
 
 // retrieve next msg block
-int nextmsgBlock{FILE *f, union msgblock *M, enum status *S, int *nobits};
+int nextmsgBlock(FILE *f, union msgblock *M, enum status *S, int *nobits);
 
 // main method
 int main(int argc, char *argv[]){
@@ -123,15 +123,15 @@ void sha256(FILE *f){
 
   // loop through message block as per page 22
   while(nextmsgBlock(f, M, S, nobits)){
-
+  
   // from page 22, W[t] = M[t] for 0 <= t <= 15
   for(t = 0; t< 16; t++)
     W[t] = M.t[t];
-
+  
   // from page 22, W[t] = ...
   for(t = 16; t < 64; t++)
    W[t] =  sig1(W[t-2]) + W[t-7] + sig0(W[t-15]) + W[t-16];
-
+  
   // initialize a, b, c, ... as per step 2
   a = H[0]; b =H[1]; c = H[2]; d = H[3];
   e = H[4]; f = H[5]; g = H[6]; h = H[7];
@@ -149,18 +149,13 @@ void sha256(FILE *f){
     b = a;
     a = T1 + T2;
   }
+   // step 4
+   H[0] = a + H[0]; H[1] = b + H[1];
+   H[2] = c + H[2]; H[3] = d + H[3];
+   H[4] = e + H[4]; H[5] = f + H[5];
+   H[6] = g + H[6]; H[7] = h + H[7];
 
-  // step 4
-  H[0] = a + H[0];
-  H[1] = b + H[1];
-  H[2] = c + H[2];
-  H[3] = d + H[3];
-  H[4] = e + H[4];
-  H[5] = f + H[5];
-  H[6] = g + H[6];
-  H[7] = h + H[7];
-
-  }
+}
   // output of the file
   printf("%x %x %x %x %x %x %x %x\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
 
@@ -202,7 +197,7 @@ uint32_t Maj(uint32_t x, uint32_t y, uint32_t z){
   return ((x & y) ^ (x & z) ^ (y & z));
 }
 
-int nextmsgBlock{FILE *f, union msgblock *M, enum status *S, int *nobits}{
+int nextmsgBlock(FILE *f, union msgblock *M, enum status *S, int *nobits){
   // for looping
   int i;
   // number of bytes from fread
@@ -273,5 +268,3 @@ int nextmsgBlock{FILE *f, union msgblock *M, enum status *S, int *nobits}{
     // if we get down here, return 1 so so function is called again
     return 1;
   }
-
-
