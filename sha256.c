@@ -47,11 +47,15 @@ int main(int argc, char *argv[]){
   printf("\n ---- SHA256 Hashing Algorithm ----\n");
   printf("\n ----------------------------------\n");
 
+  // open the file given as  first cmd argument
   FILE *f;
   f = fopen(argv[1], "r");
 
   // call the function in main method to compile
   sha256(f);
+
+  // close the file
+  fclose(f);
 
   // must add a return method
   return 0;
@@ -227,40 +231,46 @@ int nextmsgBlock{FILE *f, union msgblock *M, enum status *S, int *nobits}{
        return 1;
       }
   }
+    // get down here we haven't finished reading the file(S == READ)
+    nobytes = fread(M->e, 1, 64, f);
+    
+    // Kepp track of the number of bytes we have read
+    *nobits = *nobits + (nobytes * 8);
 
-    nobytes = fread(M.e, 1, 64, f);
-    // debug message
-    printf("Read %2llu bytes\n", nobytes);
-
-    nobits = nobits + (nobytes * 8);
+    // if less than 56 bytes is read, all padding can be put in this block
     if (nobytes < 56) {
-      printf("Found a block with less than 55 bytes!!\n");
       // adding 1
-      M.e[nobytes] = 0x80;
-      // get last 8 bytes
+      M->e[nobytes] = 0x80;
+     
+      // add 0 until last 64
       while (nobytes < 56) {
         nobytes = nobytes + 1;
         // set bytes to zero
-        M.e[nobytes] = 0x00;
+        M->e[nobytes] = 0x00;
       }
-      // set s to nobits
-    M.s[7] = nobits;
-    S = FINISH;
+      
+      // append the file size in bits as an unsigned 64 bit int
+      M.s[7] = nobits;
+      // S is finished
+      *S = FINISH;
+    // otherwise, check id can put some padding in this block
     } else if(nobytes < 64){
-      S = PAD0;
-      M.e[nobytes] = 0x80;
+      // tell S we need another block with padding but no one bit
+      *S = PAD0;
+      // put one bit into the current block
+      M->e[nobytes] = 0x80;
+      // pad the rest with 0 bits
       while (nobytes < 64){
         nobytes = nobytes + 1;
         M.e[nobytes] = 0x00;
       }
+    // check if we're at the end of the file  
     } else if (feof(f)){
-      S = PAD1;
+      // tell s we need another msg block with all the padding
+      *S = PAD1;
     }
-  }
 
-    // close the file
-    fclose(f);
-
+    // if we get down here, return 1 so so function is called again
     return 1;
   }
 
