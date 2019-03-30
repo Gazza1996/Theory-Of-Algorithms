@@ -57,8 +57,9 @@ int main(int argc, char *argv[]){
 
   // call the function in main method to compile
   printf("\n File read successful....\n");
-  sha256(msgf);
+
   fileContents(msgf);
+  sha256(msgf);
 
   // close the file
   fclose(msgf);
