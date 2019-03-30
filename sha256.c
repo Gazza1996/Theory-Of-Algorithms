@@ -6,8 +6,11 @@
 #include<stdio.h>
 #include<stdint.h>
 #include<stdlib.h>
+#include<string.h>>
 
+// functions declared
 void sha256(FILE *msgf);
+void fileContents();
 
 // Sections 4.1.2 for defintions
 uint32_t sig0(uint32_t x);
@@ -24,6 +27,8 @@ uint32_t SIG1(uint32_t x);
 // section 4.1.2
 uint32_t Ch(uint32_t x, uint32_t y, uint32_t z);
 uint32_t Maj(uint32_t x, uint32_t y, uint32_t z);
+// tells the preprocesser to create the var with value of 10000
+#define MAX 10000
 
 // message block
 union msgblock{
@@ -51,7 +56,9 @@ int main(int argc, char *argv[]){
   msgf = fopen(argv[1], "r");
 
   // call the function in main method to compile
+  printf("\n File read successful....\n");
   sha256(msgf);
+  fileContents(msgf);
 
   // close the file
   fclose(msgf);
@@ -60,7 +67,19 @@ int main(int argc, char *argv[]){
   return 0;
 }
 
+// show file contents function
+void fileContents(FILE *msgf){
+  
+  printf("\n ---- File ----\n");
+
+  // required return statement
+  return;
+
+}
+
+
 // functions
+// SHA256 function
 void sha256(FILE *msgf){
 
   // current message block
