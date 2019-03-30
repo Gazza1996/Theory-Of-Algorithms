@@ -27,6 +27,7 @@ uint32_t SIG1(uint32_t x);
 // section 4.1.2
 uint32_t Ch(uint32_t x, uint32_t y, uint32_t z);
 uint32_t Maj(uint32_t x, uint32_t y, uint32_t z);
+
 // tells the preprocesser to create the var with value of 10000
 #define MAX 10000
 
@@ -77,9 +78,11 @@ void fileContents(FILE *msgf){
   printf("\n ---- File ----\n");
 
   while(fgets(fileCont, MAX, msgf)){
-    printf("%s\n", fileCont);
+    printf(" %s\n", fileCont);
   }
 
+  printf("\n ---------------------------------------\n");
+  
   // required return statement
   return;
 
@@ -97,7 +100,7 @@ void sha256(FILE *msgf){
   // message block status(Padding)
   enum status S = READ;
 
-  printf("Starting SHA256........ \n\n");
+  printf(" ---- SHA256 output from file ----  \n\n");
 
   // k constants. Section 4.2.2
   uint32_t K[] = {
@@ -183,7 +186,7 @@ void sha256(FILE *msgf){
 
 }
   // output of the file
-  printf("%08x%08x%08x%08x%08x%08x%08x%08x\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
+  printf(" %08x%08x%08x%08x%08x%08x%08x%08x\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
 
   printf("\n ---- Completed Successfully ----\n");
 }
