@@ -156,7 +156,7 @@ void sha256(FILE *msgf){
 
 }
   // output of the file
-  printf("%08x %08x %08x %08x %08x %08x %08x %08x\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
+  printf("%08x%08x%08x%08x%08x%08x%08x%08x\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
 
   printf("\n ---- Completed Successfully ----\n");
 }
