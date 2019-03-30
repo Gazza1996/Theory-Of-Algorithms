@@ -6,7 +6,7 @@
 #include<stdio.h>
 #include<stdint.h>
 #include<stdlib.h>
-#include<string.h>>
+#include<string.h>
 
 // functions declared
 void sha256(FILE *msgf);
@@ -69,8 +69,15 @@ int main(int argc, char *argv[]){
 
 // show file contents function
 void fileContents(FILE *msgf){
-  
+
+  // vars
+  char fileCont[MAX];  
+
   printf("\n ---- File ----\n");
+
+  while(fgets(fileCont, MAX, msgf)){
+    printf("%s\n", fileCont);
+  }
 
   // required return statement
   return;
