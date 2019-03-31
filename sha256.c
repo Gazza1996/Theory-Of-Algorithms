@@ -10,7 +10,7 @@
 // functions declared
 void sha256(FILE *msgf);
 void fileContents();
-int checkEndian();
+//int checkEndian();
 
 // Sections 4.1.2 for defintions
 uint32_t sig0(uint32_t x);
@@ -30,7 +30,6 @@ uint32_t Maj(uint32_t x, uint32_t y, uint32_t z);
 
 // tells the preprocesser to create the var with value of 10000
 #define MAX 10000
-
 // message block
 union msgblock{
   uint8_t   e[64];
@@ -59,9 +58,9 @@ int main(int argc, char *argv[]){
   // call the function in main method to compile
   // printf("\n File read successful....\n");
 
-  printf("\n ------- Endian Check!! -----------\n");
+//  printf("\n ------- Endian Check!! -----------\n");
 
-  checkEndian();
+  //checkEndian();
   fileContents(msgf);
   sha256(msgf);
 
@@ -94,9 +93,10 @@ void fileContents(FILE *msgf){
 
 }
 
+// not checking properly here
 // check for big/little endian
 // https://www.geeksforgeeks.org/little-and-big-endian-mystery/
-int checkEndian(){
+/*int checkEndian(){
   int n = 1;
 
   if (*(char *)&n == 1){
@@ -105,7 +105,7 @@ int checkEndian(){
   {
     printf("\n Big Endian\n");
   }
-}
+}*/
 
 // SHA256 function
 void sha256(FILE *msgf){
@@ -204,6 +204,7 @@ void sha256(FILE *msgf){
 }
   // output of the file
   printf(" %08x%08x%08x%08x%08x%08x%08x%08x\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
+
 
   printf("\n ------ Completed Successfully ------\n");
 }
