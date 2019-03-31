@@ -100,10 +100,10 @@ int checkEndian(){
   int n = 1;
 
   if (*(char *)&n == 1){
-    printf("\n Little endian\n");
+    printf("\n Little Endian\n");
   }else
   {
-    printf("\n Big endian\n");
+    printf("\n Big Endian\n");
   }
 }
 
