@@ -58,7 +58,9 @@ int main(int argc, char *argv[]){
   msgf = fopen(argv[1], "r");
 
   // call the function in main method to compile
-  printf("\n File read successful....\n");
+  // printf("\n File read successful....\n");
+
+  printf("\n ------- Endian Check!! -----------\n");
 
   checkEndian();
   fileContents(msgf);
@@ -78,13 +80,13 @@ void fileContents(FILE *msgf){
   // vars
   char fileCont[MAX];  
 
-  printf("\n ---- File ----\n");
+  printf("\n ------------- File ---------------\n");
 
   while(fgets(fileCont, MAX, msgf)){
     printf(" %s\n", fileCont);
   }
 
-  printf("\n ---------------------------------------\n");
+  printf("\n ----------------------------------\n");
   
   // required return statement
   return;
@@ -112,7 +114,7 @@ void sha256(FILE *msgf){
   // message block status(Padding)
   enum status S = READ;
 
-  printf(" ---- SHA256 output from file ----  \n\n");
+  printf(" ---- SHA256 output from file -----  \n\n");
 
   // k constants. Section 4.2.2
   uint32_t K[] = {
@@ -200,7 +202,7 @@ void sha256(FILE *msgf){
   // output of the file
   printf(" %08x%08x%08x%08x%08x%08x%08x%08x\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
 
-  printf("\n ---- Completed Successfully ----\n");
+  printf("\n ------ Completed Successfully ------\n");
 }
 // rotate right
 uint32_t rotr(uint32_t n, uint32_t x){
