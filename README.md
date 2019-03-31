@@ -1,3 +1,6 @@
+###### Author: Gary Mannion
+###### Lecturer: Ian McLoughlin
+
 ## SHA256 Algorithm in C
 You must write a program in the C programming language that calculates the SHA-256 hecksum of an input. The algorithm is speciﬁed in the Secure Hash Standard
 document supplied by the (United States) National Institute of Standards and Technology. The only pre-requisite is that your program performs the lgorithm — you are free to decide what input the algorithm should be performed on. I suggest you allow the user to input some free text or a ﬁlename via the
