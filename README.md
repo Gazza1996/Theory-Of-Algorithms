@@ -43,6 +43,12 @@ Here are the links to these videos:
 ## Demonstration
 <img src="images/demo.png" alt="Demo"/>
 
+The image here shows us what our program is outputting.
+The file is being correctly read and we can see the text from the file.
+However, the hashing output is incorrect as we are able to check the correct hashing output [here](https://www.di-mgt.com.au/sha_testvectors.html)
+
+<img src="images/sha256.png" alt="sha"/>
+
 ## Additional Features
 - Added to the program a feature that will display out on the output screen the
   contents of the file.
@@ -54,6 +60,7 @@ https://www.geeksforgeeks.org/little-and-big-endian-mystery/
 https://www.tutorialspoint.com/c_standard_library/c_function_fgets.htm
 http://www.firmcodes.com/write-c-program-convert-little-endian-big-endian-integer/
 https://stackoverflow.com/questions/12791864/c-program-to-check-little-vs-big-endian
+https://www.di-mgt.com.au/sha_testvectors.html
 
 ## Conclusion
 This project was done under the guidance of video lectures uploaded online by
