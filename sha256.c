@@ -34,22 +34,27 @@ uint32_t Maj(uint32_t x, uint32_t y, uint32_t z);
 
 // http://www.firmcodes.com/write-c-program-convert-little-endian-big-endian-integer/
 // for converting from big to little endian
-#define IS_BIG_ENDIAN (*(uint16_t *)"\0\xff" < 0x100)
+#define LittleToBig(x) (((x) >> 24) | (((x) & 0x00FF0000) >> 8) | (((x) & 0x0000FF00) << 8) | ((x) << 24))
 
-#define byteSwap32(x) (((x) >> 24) | (((x)&0x00FF0000) >> 8) | (((x)&0x0000FF00) << 8) | ((x) << 24))
-#define byteSwap64(val) \
-    ((((val) >> 56) & 0x00000000000000FF) | (((val) >> 40) & 0x000000000000FF00) | \
-    (((val) >> 24) & 0x0000000000FF0000) | (((val) >>  8) & 0x00000000FF000000) | \
-    (((val) <<  8) & 0x000000FF00000000) | (((val) << 24) & 0x0000FF0000000000) | \
-    (((val) << 40) & 0x00FF000000000000) | (((val) << 56) & 0xFF00000000000000) )  
-
-
+#define BIG_ENDIAN (*(uint32_t *)"\0\xff" < 0x100)
 // message block
 union msgblock{
   uint8_t   e[64];
   uint32_t  t[16];
   uint64_t  s[8];
 };
+
+int bigEndian(void){
+    union
+    {
+
+      uint32_t i;
+      char c[4];
+  } 
+  e = {0x01000000};
+
+  return e.c[0] == 1;
+}
 
 enum status {READ, PAD0, PAD1, FINISH};
 
@@ -63,6 +68,11 @@ int main(int argc, char *argv[]){
   printf("\n ----------------------------------\n");
   printf("\n ---- SHA256 Hashing Algorithm ----\n");
   printf("\n ----------------------------------\n");
+
+  // adapted from
+  // https://stackoverflow.com/questions/12791864/c-program-to-check-little-vs-big-endian
+  printf(" This is %s-endian\n", bigEndian() ? "big" : "little");
+
 
   // open the file given as  first cmd argument
   FILE* msgf;
@@ -79,12 +89,6 @@ int main(int argc, char *argv[]){
           return 0;
   }
 
-  // call the function in main method to compile
-  // printf("\n File read successful....\n");
-
-  //printf("\n ------- Endian Check!! -----------\n");
-
-  //checkEndian();
   fileContents(msgf);
   sha256(msgf);
 
@@ -112,38 +116,10 @@ void fileContents(FILE *msgf){
 
   printf("\n ----------------------------------\n");
   
-  //fclose(filePrint);
-
   // required return statement
   return;
 
 }
-
-// not checking properly here
-// check for big/little endian
-// https://www.geeksforgeeks.org/little-and-big-endian-mystery/ 
-/*int checkEndian(){
-  int n = 1;
-
-  if (*(char *)&n == 1){
-    printf("\n Little Endian\n");
-  }else
-  {
-    printf("\n Big Endian\n");
-  }
-}
-
-_Bool endianCheck()
-{
-  int n = 1 ;
- 
-  if(*(char *)&n == 1) {
-      return false;
-    } else {
-      return true;
-  }
-}
-*/
 // SHA256 function
 void sha256(FILE *msgf){
 
@@ -210,7 +186,7 @@ void sha256(FILE *msgf){
   
   // from page 22, W[t] = M[t] for 0 <= t <= 15
   for(t = 0; t< 16; t++)
-    W[t] = byteSwap32( M.t[t]);
+    W[t] = M.t[t];
 
   
   // from page 22, W[t] = ...
@@ -241,15 +217,20 @@ void sha256(FILE *msgf){
    H[6] = g + H[6]; H[7] = h + H[7];
 
 }
-  // output of the file
-//  printf(" %08x%08x%08x%08x%08x%08x%08x%08x\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
-  
-// output when converting from big to little endian and vice versa.
-  if(IS_BIG_ENDIAN){
-    printf(" %08x%08x%08x%08x%08x%08x%08x%08x\n",H[0], H[1],H[2],H[3], H[4], H[5], H[6],  H[7]);
+
+      H[1] >> (24 - i *8) & 0x000000ff;
+      H[2] >> (24 - i *8) & 0x000000ff;
+      H[3] >> (24 - i *8) & 0x000000ff;
+      H[4] >> (24 - i *8) & 0x000000ff;
+      H[5] >> (24 - i *8) & 0x000000ff;
+      H[6] >> (24 - i *8) & 0x000000ff;
+      H[7] >> (24 - i *8) & 0x000000ff;
+
+      // output when converting from big to little endian and vice versa.
+  if(BIG_ENDIAN){
+    printf(" %08x%08x%08x%08x%08x%08x%08x%08x\n\n",H[0], H[1],H[2],H[3], H[4], H[5], H[6],  H[7]);
   }else{
-    printf(" %08x%08x%08x%08x%08x%08x%08x%08x\n",byteSwap32(H[0]),byteSwap32(H[1]),byteSwap32(H[2]),
-        byteSwap32(H[3]),byteSwap32(H[4]),byteSwap32(H[5]),byteSwap32(H[6]),byteSwap32(H[7]));
+    printf(" %08x%08x%08x%08x%08x%08x%08x%08x\n\n",H[0], H[1],H[2],H[3], H[4], H[5], H[6],  H[7]);
   }
 
   printf("\n ------ Completed Successfully ------\n");
@@ -309,7 +290,7 @@ int nextmsgBlock(FILE *msgf, union msgblock *M, enum status *S, uint64_t *nobits
       }
       
       // set last 64 bits to the number of bits in the file(should be big endian)
-      M->s[7] = byteSwap64(*nobits);
+      M->s[7] = *nobits;
       // tell S we are finished
       *S = FINISH;
        
