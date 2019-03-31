@@ -18,9 +18,9 @@ If you wish to compile and run thus program you must do the following:
 ## Running
 After compiling your program you can then run it from terminal using the
 following command:
-'''
+```
 ./sha256 test.txt
-'''
+```
 
 ## Additional Features
 - Added to the program a feature that will display out on the output screen the
