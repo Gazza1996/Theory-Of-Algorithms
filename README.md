@@ -37,8 +37,6 @@ Here are the links to these videos:
 * [Video - Part 5](https://web.microsoftstream.com/video/200e71ec-1dc1-47a4-9de8-6f58781e3f38) 
 * [Video - Part 6](https://web.microsoftstream.com/video/f823809a-d8df-4e12-b243-e1f8ed76b93f)
 * [What is SHA256?](https://www.hashgains.com/wiki/s/what-is-sha-256)
-* [The Difference Between SHA-1,2 and 256](https://www.thesslstore.com/blog/difference-sha-1-sha-2-sha-256-hash-algorithms)
-* [SHA256 and Bitcoin](https://www.mycryptopedia.com/sha-256-related-bitcoin)
 
 ## Demonstration
 <img src="images/demo.png" alt="Demo"/>
@@ -47,7 +45,11 @@ The image here shows us what our program is outputting.
 The file is being correctly read and we can see the text from the file.
 However, the hashing output is incorrect as we are able to check the correct hashing output [here](https://www.di-mgt.com.au/sha_testvectors.html)
 
+The image below is what our correct hashing output should be.
+
 <img src="images/sha256.png" alt="sha"/>
+
+- Unfortunately I have been unable to convert from little endian to big endian before the deadline of this project. Despite this I will still work on later on in the year to get this working correctly for my own learning and experience.
 
 ## Additional Features
 - Added to the program a feature that will display out on the output screen the
