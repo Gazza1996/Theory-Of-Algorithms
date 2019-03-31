@@ -39,8 +39,10 @@ https://www.tutorialspoint.com/c_standard_library/c_function_fgets.htm
 ## Conclusion
 This project was done under the guidance of video lectures uploaded online by
 my lecturer Ian Mcloughlin.
+
 Under Ian McLoughlins supervision I have gained some knowledge of the SHA256
 algorithm and also regained my knowledge of the C language.
+
 I would also like to thank Ian for giving us the option of using VIM for
 completing this project as it gave me the chance to understand and learn how to
 complete a program in VIM. I also added some experience in using the linux
