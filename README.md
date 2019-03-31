@@ -35,6 +35,7 @@ For running from this repo we must run the following command:
 ## Research/References
 https://www.geeksforgeeks.org/little-and-big-endian-mystery/
 https://www.tutorialspoint.com/c_standard_library/c_function_fgets.htm
+http://www.firmcodes.com/write-c-program-convert-little-endian-big-endian-integer/
 
 ## Conclusion
 This project was done under the guidance of video lectures uploaded online by

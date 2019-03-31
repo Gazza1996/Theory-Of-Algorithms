@@ -5,19 +5,21 @@
 // input/output
 #include<stdio.h>
 #include<stdint.h>
+#include <stdbool.h>
 
 // functions declared
 void sha256(FILE *msgf);
 void fileContents();
 //int checkEndian();
+//_Bool endianCheck();
 
 // Sections 4.1.2 for defintions
 uint32_t sig0(uint32_t x);
 uint32_t sig1(uint32_t x);
 
 // Section 3.2 for defintion
-uint32_t rotr(uint32_t n, uint32_t x);
-uint32_t shr(uint32_t n, uint32_t x);
+uint32_t rotr(uint32_t n, uint16_t x);
+uint32_t shr(uint32_t n, uint16_t x);
 
 // section 4.1.2
 uint32_t SIG0(uint32_t x);
@@ -30,6 +32,18 @@ uint32_t Maj(uint32_t x, uint32_t y, uint32_t z);
 // tells the preprocesser to create the var with value of 10000
 #define MAX 10000
 
+// http://www.firmcodes.com/write-c-program-convert-little-endian-big-endian-integer/
+// for converting from big to little endian
+#define IS_BIG_ENDIAN (*(uint16_t *)"\0\xff" < 0x100)
+
+#define byteSwap32(x) (((x) >> 24) | (((x)&0x00FF0000) >> 8) | (((x)&0x0000FF00) << 8) | ((x) << 24))
+#define byteSwap64(val) \
+    ((((val) >> 56) & 0x00000000000000FF) | (((val) >> 40) & 0x000000000000FF00) | \
+    (((val) >> 24) & 0x0000000000FF0000) | (((val) >>  8) & 0x00000000FF000000) | \
+    (((val) <<  8) & 0x000000FF00000000) | (((val) << 24) & 0x0000FF0000000000) | \
+    (((val) << 40) & 0x00FF000000000000) | (((val) << 56) & 0xFF00000000000000) )  
+
+
 // message block
 union msgblock{
   uint8_t   e[64];
@@ -38,7 +52,6 @@ union msgblock{
 };
 
 enum status {READ, PAD0, PAD1, FINISH};
-
 
 // retrieve next msg block
 int nextmsgBlock(FILE *msgf, union msgblock *M, enum status *S, uint64_t *nobits);
@@ -53,12 +66,17 @@ int main(int argc, char *argv[]){
 
   // open the file given as  first cmd argument
   FILE* msgf;
-  msgf = fopen(argv[1], "r");
-
-  // error handling
-  if(!msgf){
-    printf("\n No file found!!\n");
-    return 0;
+  
+  if(argc !=2){
+    printf("file not supplied..\n.");
+          return 0; 
+  }
+ 
+  msgf= fopen(argv[1], "r");
+        
+  if(msgf == NULL){
+    printf("invalid file name\n");
+          return 0;
   }
 
   // call the function in main method to compile
@@ -94,6 +112,8 @@ void fileContents(FILE *msgf){
 
   printf("\n ----------------------------------\n");
   
+  //fclose(filePrint);
+
   // required return statement
   return;
 
@@ -111,29 +131,40 @@ void fileContents(FILE *msgf){
   {
     printf("\n Big Endian\n");
   }
-}*/
+}
 
+_Bool endianCheck()
+{
+  int n = 1 ;
+ 
+  if(*(char *)&n == 1) {
+      return false;
+    } else {
+      return true;
+  }
+}
+*/
 // SHA256 function
 void sha256(FILE *msgf){
 
   // k constants. Section 4.2.2
   uint32_t K[] = {
-  0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,
-  0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
-  0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,
-  0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
-  0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,
-  0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
-  0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,
-  0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
-  0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,
-  0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
-  0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,
-  0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
-  0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,
-  0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
-  0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,
-  0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
+    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
+    0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+    0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
+    0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+    0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc,
+    0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+    0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7,
+    0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+    0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13,
+    0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+    0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3,
+    0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5,
+    0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+    0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
+    0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
   };
 
   // current message block
@@ -179,7 +210,8 @@ void sha256(FILE *msgf){
   
   // from page 22, W[t] = M[t] for 0 <= t <= 15
   for(t = 0; t< 16; t++)
-    W[t] = M.t[t];
+    W[t] = byteSwap32( M.t[t]);
+
   
   // from page 22, W[t] = ...
   for(t = 16; t < 64; t++)
@@ -210,41 +242,48 @@ void sha256(FILE *msgf){
 
 }
   // output of the file
-  printf(" %08x%08x%08x%08x%08x%08x%08x%08x\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
-
+//  printf(" %08x%08x%08x%08x%08x%08x%08x%08x\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
+  
+// output when converting from big to little endian and vice versa.
+  if(IS_BIG_ENDIAN){
+    printf(" %08x%08x%08x%08x%08x%08x%08x%08x\n",H[0], H[1],H[2],H[3], H[4], H[5], H[6],  H[7]);
+  }else{
+    printf(" %08x%08x%08x%08x%08x%08x%08x%08x\n",byteSwap32(H[0]),byteSwap32(H[1]),byteSwap32(H[2]),
+        byteSwap32(H[3]),byteSwap32(H[4]),byteSwap32(H[5]),byteSwap32(H[6]),byteSwap32(H[7]));
+  }
 
   printf("\n ------ Completed Successfully ------\n");
 }
 // rotate right
-uint32_t rotr(uint32_t n, uint32_t x){
-  return (x >> n) | (x << (32 - n));
+uint32_t rotr(uint32_t x, uint16_t g){
+  return (x >> g) | (x << (32 - g));
 }
+
 // shift right
-uint32_t shr(uint32_t n, uint32_t x){
+uint32_t shr(uint32_t n, uint16_t x){
   return (x >> n);
 }
 
 uint32_t sig0(uint32_t x){
   // sections 3.1 and  4.1.2 for definitions
-  return (rotr(7, x) ^ rotr(10, x) ^ shr(3, x));
+  return (rotr(x, 7) ^ rotr(x, 18) ^ shr(x, 3));
 }
 
 uint32_t sig1(uint32_t x){
-  return (rotr(17, x) ^ rotr(19, x) ^ shr(10,x ));
+  return (rotr(x, 17) ^ rotr(x, 19) ^ shr(x, 10));
 }
 
-
 uint32_t SIG0(uint32_t x){
-  return (rotr(2, x) ^ rotr(13, x) ^ rotr(22, x));
+  return (rotr(x, 2) ^ rotr(x, 13) ^ rotr(x, 22));
 }
 
 uint32_t SIG1(uint32_t x){
-  return (rotr(6, x) ^ rotr(11, x) ^ rotr(25, x));
+  return (rotr(x, 6) ^ rotr(x, 11) ^ rotr(x, 25));
 }
 
 // choose
 uint32_t Ch(uint32_t x, uint32_t y, uint32_t z){
-  return ((x & y) ^ ((!x) & z));
+  return ((x & y) ^ (~(x) & z));
 }
 // Majority
 uint32_t Maj(uint32_t x, uint32_t y, uint32_t z){
@@ -270,7 +309,7 @@ int nextmsgBlock(FILE *msgf, union msgblock *M, enum status *S, uint64_t *nobits
       }
       
       // set last 64 bits to the number of bits in the file(should be big endian)
-      M->s[7] = *nobits;
+      M->s[7] = byteSwap64(*nobits);
       // tell S we are finished
       *S = FINISH;
        
