@@ -58,11 +58,11 @@ The image below is what our correct hashing output should be.
 - My code is written to tell me what type of endian is being used(big/little)
 
 ## Research/References
-https://www.geeksforgeeks.org/little-and-big-endian-mystery/
-https://www.tutorialspoint.com/c_standard_library/c_function_fgets.htm
-http://www.firmcodes.com/write-c-program-convert-little-endian-big-endian-integer/
-https://stackoverflow.com/questions/12791864/c-program-to-check-little-vs-big-endian
-https://www.di-mgt.com.au/sha_testvectors.html
+[Big v little endian](https://www.geeksforgeeks.org/little-and-big-endian-mystery/)
+[fgets function](https://www.tutorialspoint.com/c_standard_library/c_function_fgets.htm)
+[Converting big to little endian](http://www.firmcodes.com/write-c-program-convert-little-endian-big-endian-integer/)
+[Checking little or big endiam in C](https://stackoverflow.com/questions/12791864/c-program-to-check-little-vs-big-endian)
+[Hash output checker](https://www.di-mgt.com.au/sha_testvectors.html)
 
 ## Conclusion
 This project was done under the guidance of video lectures uploaded online by
