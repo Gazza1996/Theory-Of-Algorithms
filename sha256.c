@@ -5,7 +5,6 @@
 // input/output
 #include<stdio.h>
 #include<stdint.h>
-#include<stdlib.h>
 
 // functions declared
 void sha256(FILE *msgf);
@@ -30,6 +29,7 @@ uint32_t Maj(uint32_t x, uint32_t y, uint32_t z);
 
 // tells the preprocesser to create the var with value of 10000
 #define MAX 10000
+
 // message block
 union msgblock{
   uint8_t   e[64];
@@ -55,10 +55,16 @@ int main(int argc, char *argv[]){
   FILE* msgf;
   msgf = fopen(argv[1], "r");
 
+  // error handling
+  if(!msgf){
+    printf("\n No file found!!\n");
+    return 0;
+  }
+
   // call the function in main method to compile
   // printf("\n File read successful....\n");
 
-//  printf("\n ------- Endian Check!! -----------\n");
+  //printf("\n ------- Endian Check!! -----------\n");
 
   //checkEndian();
   fileContents(msgf);
@@ -95,7 +101,7 @@ void fileContents(FILE *msgf){
 
 // not checking properly here
 // check for big/little endian
-// https://www.geeksforgeeks.org/little-and-big-endian-mystery/
+// https://www.geeksforgeeks.org/little-and-big-endian-mystery/ 
 /*int checkEndian(){
   int n = 1;
 
@@ -109,15 +115,6 @@ void fileContents(FILE *msgf){
 
 // SHA256 function
 void sha256(FILE *msgf){
-
-  // current message block
-  union msgblock M;
-  // number of bits read from the file
-  uint64_t nobits = 0;
-  // message block status(Padding)
-  enum status S = READ;
-
-  printf(" ---- SHA256 output from file -----  \n\n");
 
   // k constants. Section 4.2.2
   uint32_t K[] = {
@@ -138,6 +135,16 @@ void sha256(FILE *msgf){
   0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,
   0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
   };
+
+  // current message block
+  union msgblock M;
+  // number of bits read from the file
+  uint64_t nobits = 0;
+  // message block status(Padding)
+  enum status S = READ;
+
+  printf(" ---- SHA256 output from file -----  \n\n");
+
 
   // message schedule(section 6.2)
   uint32_t W[64];
@@ -179,7 +186,7 @@ void sha256(FILE *msgf){
    W[t] =  sig1(W[t-2]) + W[t-7] + sig0(W[t-15]) + W[t-16];
   
   // initialize a, b, c, ... as per step 2
-  a = H[0]; b =H[1]; c = H[2]; d = H[3];
+  a = H[0]; b = H[1]; c = H[2]; d = H[3];
   e = H[4]; f = H[5]; g = H[6]; h = H[7];
 
   // step 3
