@@ -6,7 +6,6 @@
 #include<stdio.h>
 #include<stdint.h>
 #include<stdlib.h>
-#include<string.h>
 
 // functions declared
 void sha256(FILE *msgf);
@@ -82,6 +81,8 @@ void fileContents(FILE *msgf){
 
   printf("\n ------------- File ---------------\n");
 
+  // gets our file content
+  // https://www.tutorialspoint.com/c_standard_library/c_function_fgets.htm
   while(fgets(fileCont, MAX, msgf)){
     printf(" %s\n", fileCont);
   }
@@ -93,6 +94,8 @@ void fileContents(FILE *msgf){
 
 }
 
+// check for big/little endian
+// https://www.geeksforgeeks.org/little-and-big-endian-mystery/
 int checkEndian(){
   int n = 1;
 
