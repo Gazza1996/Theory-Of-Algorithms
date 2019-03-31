@@ -41,7 +41,7 @@ Here are the links to these videos:
 * [SHA256 and Bitcoin](https://www.mycryptopedia.com/sha-256-related-bitcoin)
 
 ## Demonstration
-<img src="images/Demo.png" alt="Demo"/>
+<img src="images/demo.png" alt="Demo"/>
 
 ## Additional Features
 - Added to the program a feature that will display out on the output screen the
