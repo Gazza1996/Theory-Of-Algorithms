@@ -11,6 +11,7 @@
 // functions declared
 void sha256(FILE *msgf);
 void fileContents();
+int checkEndian();
 
 // Sections 4.1.2 for defintions
 uint32_t sig0(uint32_t x);
@@ -59,6 +60,7 @@ int main(int argc, char *argv[]){
   // call the function in main method to compile
   printf("\n File read successful....\n");
 
+  checkEndian();
   fileContents(msgf);
   sha256(msgf);
 
@@ -69,6 +71,7 @@ int main(int argc, char *argv[]){
   return 0;
 }
 
+// functions
 // show file contents function
 void fileContents(FILE *msgf){
 
@@ -88,8 +91,17 @@ void fileContents(FILE *msgf){
 
 }
 
+int checkEndian(){
+  int n = 1;
 
-// functions
+  if (*(char *)&n == 1){
+    printf("\n Little endian\n");
+  }else
+  {
+    printf("\n Big endian\n");
+  }
+}
+
 // SHA256 function
 void sha256(FILE *msgf){
 
